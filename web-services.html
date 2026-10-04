@@ -1,0 +1,1586 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Fetch Setter Polyfill/Safeguard for iframe Sandbox Environments -->
+    <script>
+        (function() {
+            try {
+                var _currentFetch = window.fetch;
+                if (typeof Window !== 'undefined' && Window.prototype) {
+                    try {
+                        var protoDesc = Object.getOwnPropertyDescriptor(Window.prototype, 'fetch');
+                        if (!protoDesc || !protoDesc.set || !protoDesc.writable) {
+                            Object.defineProperty(Window.prototype, 'fetch', {
+                                get: function() { return _currentFetch; },
+                                set: function(fn) { _currentFetch = fn; },
+                                configurable: true,
+                                enumerable: true
+                            });
+                        }
+                    } catch (err) {}
+                }
+                try {
+                    var winDesc = Object.getOwnPropertyDescriptor(window, 'fetch');
+                    if (!winDesc || !winDesc.set || !winDesc.writable) {
+                        Object.defineProperty(window, 'fetch', {
+                            get: function() { return _currentFetch; },
+                            set: function(fn) { _currentFetch = fn; },
+                            configurable: true,
+                            enumerable: true
+                        });
+                    }
+                } catch (err) {}
+            } catch (e) {}
+        })();
+    </script>
+    <title>Web Architecture &amp; Digital Solutions - H.O. Damilare Michael</title>
+    <meta name="description" content="Technical web architecture, dual-motion carousels, custom web applications, marketplaces, CMS builds, email automations, and LMS platforms by H.O. Damilare Michael (HODM).">
+    <meta property="og:title" content="Web Architecture &amp; Digital Solutions - H.O. Damilare Michael">
+    <meta property="og:description" content="High-performance web architecture, scalable custom applications, and automated digital systems.">
+    <meta name="theme-color" content="#0D0F12">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="alternate icon" href="favicon.svg">
+    <link rel="apple-touch-icon" href="favicon.svg">
+
+    <!-- JSON-LD FAQ Schema for Web Architecture -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "What architectural principles and frameworks guide your engineering?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Every system is architected with modern modularity, type safety, and zero bloat: Next.js App Router, React 19, TypeScript, Tailwind CSS, PostgreSQL, and GSAP/WebGL for hardware-accelerated animations. Codebases emphasize atomic component design and strict clean architecture."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How do you guarantee 99.9% uptime, sub-second load times, and edge performance?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "We deploy on global edge networks (Cloudflare, Vercel, Netlify) with asset streaming, smart caching policies, automated Brotli compression, and minimal client runtime overhead, routinely scoring 95+ on Google Core Web Vitals."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Are all 26 projects in your showcase portfolio active, authentic, and inspectable?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes, every single system in the showcase links to its authentic GitHub repository and corresponding live production deployment (including Xpera at Xpera.io). Projects without active public hosting clearly indicate offline status with zero fake links."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is your software development lifecycle, testing methodology, and code handoff?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Projects follow a structured lifecycle: Architecture Specification, Interactive Wireframing, Sprint Development, Unit/E2E Testing, and Automated CI/CD Deployment. Handoff includes full git histories, environment setup manuals, and architecture documentation."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can you architect custom API integrations, automated webhooks, and payment gateways?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes, we build resilient webhook orchestrations, Stripe/PayPal payment systems, headless CMS connectors (WordPress, Strapi, Sanity), CRM synchronizations, and custom REST/GraphQL endpoints with rate limiting and automated retry queues."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Do you provide technical NDAs, ongoing maintenance SLAs, and cloud security monitoring?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Mutual non-disclosure agreements (NDAs) are provided before project discovery commences. We also offer monthly maintenance SLAs covering security patches, dependency updates, uptime monitoring, and SLA incident response."
+          }
+        }
+      ]
+    }
+    </script>
+
+    <!-- Modern Editorial Typography: Syne, Space Grotesk, Plus Jakarta Sans, Inter & JetBrains Mono -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400;1,600&family=Space+Grotesk:wght@500;600;700&family=Syne:wght@500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- Tailwind CSS (CDN with Custom Config) -->
+    <script>
+        window.tailwind = window.tailwind || {};
+        window.tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        dark: '#0D0F12',
+                        surface: '#12161A',
+                        card: 'rgba(22, 27, 34, 0.65)',
+                        cream: '#F5E6C8',
+                        custard: '#E6C280',
+                        lightCustard: '#FFF3CD',
+                        gold: '#F0C05A'
+                    },
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'Inter', 'system-ui', 'sans-serif'],
+                        display: ['"Syne"', '"Space Grotesk"', '"Plus Jakarta Sans"', 'sans-serif'],
+                        heading: ['"Syne"', '"Space Grotesk"', '"Plus Jakarta Sans"', 'sans-serif'],
+                        serif: ['"Syne"', '"Space Grotesk"', '"Plus Jakarta Sans"', 'sans-serif'],
+                        mono: ['"JetBrains Mono"', 'monospace']
+                    }
+                }
+            }
+        };
+    </script>
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- GSAP for Smooth Choreography -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body data-page-theme="web" class="bg-[#0D0F12] text-[#C9D1D9] antialiased selection:bg-[#E6C280] selection:text-[#0D0F12]">
+
+    <!-- SCROLL PROGRESS INDICATOR -->
+    <div class="scroll-progress-bar" id="scrollProgress"></div>
+
+    <!-- PAGE-SPECIFIC ANIMATED BACKGROUND: ANALYTICS DATA GRID STRUCTURAL BUILDING -->
+    <div class="analytics-grid-overlay" aria-hidden="true"></div>
+    <canvas id="analyticsGridCanvas" class="canvas-bg-layer" aria-hidden="true"></canvas>
+
+    <!-- INTERACTIVE CURSOR AMBIENT GLOW -->
+    <div class="cursor-glow" id="cursorGlow"></div>
+
+    <!-- PRELOADER -->
+    <div id="preloader" aria-hidden="true">
+        <div class="loader-brand">H.O. <span>DAMILARE MICHAEL</span></div>
+        <div class="loader-bar-wrap">
+            <div class="loader-bar-progress"></div>
+        </div>
+        <div class="loader-percentage">0%</div>
+    </div>
+
+    <!-- GLOBAL FLOATING LEFT CONTACT BAR -->
+    <aside class="global-contact-sidebar" aria-label="Social and Direct Contact Profiles">
+        <a href="https://www.tiktok.com/@reel3dlab" target="_blank" rel="noopener noreferrer" class="contact-sidebar-item" aria-label="TikTok">
+            <i class="fab fa-tiktok"></i>
+            <span class="sidebar-tooltip">TikTok</span>
+        </a>
+        <a href="https://www.youtube.com/@Reel3DLab" target="_blank" rel="noopener noreferrer" class="contact-sidebar-item" aria-label="YouTube">
+            <i class="fab fa-youtube"></i>
+            <span class="sidebar-tooltip">YouTube</span>
+        </a>
+        <a href="https://wa.me/2348000000000?text=Hello%20H.O.%20Damilare%20Michael%2C%20I%20am%20interested%20in%20web%20architecture." target="_blank" rel="noopener noreferrer" class="contact-sidebar-item" aria-label="WhatsApp">
+            <i class="fab fa-whatsapp"></i>
+            <span class="sidebar-tooltip">WhatsApp</span>
+        </a>
+        <a href="https://www.upwork.com/freelancers/~01a75506807291c279?mp_source=share" target="_blank" rel="noopener noreferrer" class="contact-sidebar-item" aria-label="Upwork">
+            <svg viewBox="0 0 24 24"><path d="M18.561 13.158c-1.102 0-2.135-.467-3.074-1.227l.228-1.076.008-.042c.207-1.143.849-3.06 2.839-3.06 1.492 0 2.703 1.212 2.703 2.703-.001 1.489-1.212 2.702-2.704 2.702zm0-8.14c-3.799 0-5.466 2.97-5.918 4.706C11.516 7.42 9.458 4.755 7.643 4.755c-2.484 0-4.5 2.016-4.5 4.5 0 2.485 2.016 4.501 4.5 4.501.996 0 1.918-.328 2.67-.881l-1.348 6.368h2.834l1.378-6.505c.829.588 1.777.957 2.822.957 3.799 0 6.643-2.88 6.643-6.702.001-3.82-2.843-6.697-6.642-6.697z"/></svg>
+            <span class="sidebar-tooltip">Upwork</span>
+        </a>
+        <a href="https://www.fiverr.com/oloxa001" target="_blank" rel="noopener noreferrer" class="contact-sidebar-item" aria-label="Fiverr">
+            <svg viewBox="0 0 24 24"><path d="M16.25 16.25v-8.5h-2.5v1.8c-.6-.9-1.5-1.8-3-1.8-2.6 0-4.5 2.1-4.5 4.7s1.9 4.7 4.5 4.7c1.5 0 2.4-.8 3-1.8v1.7h2.5zm-5-1.9c-1.4 0-2.3-1.1-2.3-2.3 0-1.3.9-2.3 2.3-2.3s2.3 1.1 2.3 2.3c0 1.3-.9 2.3-2.3 2.3z"/></svg>
+            <span class="sidebar-tooltip">Fiverr</span>
+        </a>
+        <a href="https://behance.net/hodm_michael" target="_blank" rel="noopener noreferrer" class="contact-sidebar-item" aria-label="Behance">
+            <i class="fab fa-behance"></i>
+            <span class="sidebar-tooltip">Behance</span>
+        </a>
+        <a href="https://github.com/Oloxa" target="_blank" rel="noopener noreferrer" class="contact-sidebar-item" aria-label="GitHub">
+            <i class="fab fa-github"></i>
+            <span class="sidebar-tooltip">GitHub</span>
+        </a>
+        <a href="https://www.linkedin.com/in/mooloyede" target="_blank" rel="noopener noreferrer" class="contact-sidebar-item" aria-label="LinkedIn">
+            <i class="fab fa-linkedin-in"></i>
+            <span class="sidebar-tooltip">LinkedIn</span>
+        </a>
+        <a href="https://www.instagram.com/reel3dlab/" target="_blank" rel="noopener noreferrer" class="contact-sidebar-item" aria-label="Instagram">
+            <i class="fab fa-instagram"></i>
+            <span class="sidebar-tooltip">Instagram</span>
+        </a>
+        <a href="https://facebook.com/hodm.michael" target="_blank" rel="noopener noreferrer" class="contact-sidebar-item" aria-label="Facebook">
+            <i class="fab fa-facebook-f"></i>
+            <span class="sidebar-tooltip">Facebook</span>
+        </a>
+        <a href="https://contra.com/michael_qd3y29kn?referralExperimentNid=DEFAULT_REFERRAL_PROGRAM&referrerUsername=michael_qd3y29kn" target="_blank" rel="noopener noreferrer" class="contact-sidebar-item" aria-label="Contra">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2" fill="none"/><path d="M15 9a4.5 4.5 0 0 0-6 3.5 4.5 4.5 0 0 0 6 3.5"/></svg>
+            <span class="sidebar-tooltip">Contra</span>
+        </a>
+        <a href="mailto:reel3dlab@gmail.com" class="contact-sidebar-item" aria-label="Email Direct">
+            <i class="fas fa-envelope"></i>
+            <span class="sidebar-tooltip">reel3dlab@gmail.com</span>
+        </a>
+    </aside>
+
+    <button id="mobileContactToggle" type="button" class="mobile-contact-pill-toggle" aria-label="Toggle Contact Links" aria-expanded="false">
+        <i class="fas fa-address-book"></i>
+    </button>
+
+    <!-- FLOATING SECTIONS HAMBURGER HEADER NAV WITH GLOWING EDGE ARROWS -->
+    <nav class="page-sections-nav-wrapper" id="pageSectionsNav" aria-label="Page Sections Navigation">
+        <!-- Glowing Left Edge Backward Arrow -> Leads to Home Page -->
+        <a href="index.html" class="page-edge-nav-btn page-edge-nav-left" title="Back to Home Page" aria-label="Navigate to Home Page">
+            <i class="fas fa-arrow-left"></i>
+            <span class="page-edge-nav-label">Home</span>
+        </a>
+
+        <div class="page-sections-pill" id="pageSectionsPill">
+            <!-- Hamburger Toggle Trigger -->
+            <button id="sectionsMenuToggle" type="button" class="sections-hamburger-btn" aria-expanded="false" aria-controls="sectionsHorizontalMenu" aria-label="Toggle Navigation Menu">
+                <span class="hamburger-icon-wrap" aria-hidden="true">
+                    <span class="ham-bar ham-bar-1"></span>
+                    <span class="ham-bar ham-bar-2"></span>
+                    <span class="ham-bar ham-bar-3"></span>
+                </span>
+                <span class="sections-btn-label">Menu</span>
+                <span class="sections-badge-count">7</span>
+                <i class="fas fa-chevron-right sections-btn-arrow" aria-hidden="true"></i>
+            </button>
+
+            <!-- Horizontal Section Nav Menu (revealed when clicked) -->
+            <div id="sectionsHorizontalMenu" class="sections-horizontal-menu">
+                <div class="sections-horizontal-scroll" role="menubar">
+                    <!-- Horizontal Section Titles -->
+                    <a href="#hero" class="section-nav-link active" role="menuitem" data-section="hero">
+                        <span class="section-num">01</span>
+                        <span>Overview</span>
+                    </a>
+                    <a href="#intro-video" class="section-nav-link" role="menuitem" data-section="intro-video">
+                        <span class="section-num">02</span>
+                        <span>Philosophy</span>
+                    </a>
+                    <a href="#dual-carousels" class="section-nav-link" role="menuitem" data-section="dual-carousels">
+                        <span class="section-num">03</span>
+                        <span>Tech Showcase</span>
+                    </a>
+                    <a href="#paginated-portfolio" class="section-nav-link" role="menuitem" data-section="paginated-portfolio">
+                        <span class="section-num">04</span>
+                        <span>Portfolio</span>
+                    </a>
+                    <a href="#services-matrix" class="section-nav-link" role="menuitem" data-section="services-matrix">
+                        <span class="section-num">05</span>
+                        <span>Solutions Matrix</span>
+                    </a>
+                    <a href="#faq" class="section-nav-link" role="menuitem" data-section="faq">
+                        <span class="section-num">06</span>
+                        <span>Technical FAQ</span>
+                    </a>
+                    <a href="#contact-tech" class="section-nav-link" role="menuitem" data-section="contact-tech">
+                        <span class="section-num">07</span>
+                        <span>Consultation</span>
+                    </a>
+                </div>
+
+                <!-- Close Button -->
+                <button id="sectionsMenuClose" type="button" class="sections-close-btn" aria-label="Collapse Section Menu">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Glowing Right Edge Forward Arrow -> Leads to Leadership & Business Page -->
+        <a href="leadership-business.html" class="page-edge-nav-btn page-edge-nav-right" title="Proceed to Leadership & Health" aria-label="Navigate to Leadership Page">
+            <span class="page-edge-nav-label">Leadership</span>
+            <i class="fas fa-arrow-right"></i>
+        </a>
+    </nav>
+
+    <!-- MAIN CONTENT -->
+    <main class="flex-grow pt-20 sm:pt-24 pb-16 relative z-10">
+
+        <!-- 1. TECHNICAL HERO SECTION -->
+        <section id="hero" class="relative min-h-[70vh] flex items-center justify-center px-4 sm:px-6 lg:px-8 overflow-hidden bg-transparent">
+            <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[850px] h-[550px] bg-gradient-to-tr from-[#E6C280]/10 via-[#FFF3CD]/5 to-transparent rounded-full blur-[150px] pointer-events-none"></div>
+
+            <div class="relative z-10 max-w-6xl mx-auto w-full grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+                <!-- Text Column -->
+                <div class="lg:col-span-7 hero-fade-in">
+                    <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#12161A]/80 border border-[#E6C280]/20 text-xs font-mono text-[#F5E6C8] mb-6 backdrop-blur-md">
+                        <span class="w-2 h-2 rounded-full dot-green"></span>
+                        <span>SYSTEM SPECIFICATION // PRODUCTION ARCHITECTURE</span>
+                    </div>
+
+                    <h1 class="font-display text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-[#F5E6C8] leading-[1.08] mb-6">
+                        Engineered for Speed, <br>
+                        <span class="text-transparent bg-clip-text bg-gradient-to-r from-[#E6C280] via-[#FFF3CD] to-[#F5E6C8]">Resilience &amp; Enterprise Scale.</span>
+                    </h1>
+
+                    <p class="text-base sm:text-lg text-[#A0AEC0] max-w-xl leading-relaxed mb-8">
+                        Delivering scalable React 19/Next.js applications, multi-vendor marketplaces, headless CMS ecosystems, automated email funnels, and real-time APIs architected by <span class="text-[#F5E6C8] font-semibold">H.O. Damilare Michael</span>.
+                    </p>
+
+                    <div class="flex flex-wrap items-center gap-4">
+                        <a href="#dual-carousels" class="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full bg-[#E6C280] text-[#0D0F12] font-bold text-sm hover:bg-[#FFF3CD] hover:shadow-[0_0_20px_rgba(230,194,128,0.4)] transition-all">
+                            <span>Explore Portfolio &amp; Repositories</span>
+                            <i class="fas fa-arrow-down text-xs"></i>
+                        </a>
+                        <a href="#services-matrix" class="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full bg-[#161B22]/80 hover:bg-[#1C2128] border border-[rgba(245,230,200,0.15)] text-[#F5E6C8] font-semibold text-sm transition-all">
+                            <i class="fas fa-layer-group text-[#E6C280]"></i>
+                            <span>5 Core Services</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Strategic Executive Solutions Architect Card: Image & Name -->
+                <div class="lg:col-span-5 hero-fade-in flex justify-center">
+                    <div class="relative w-full max-w-[360px]">
+                        <!-- Ambient Gold Halo -->
+                        <div class="absolute -inset-1.5 rounded-[26px] bg-gradient-to-tr from-[#E6C280]/25 via-transparent to-[#FFF3CD]/15 blur-md pointer-events-none"></div>
+
+                        <div class="relative rounded-[22px] overflow-hidden glass-container p-3 sm:p-3.5 shadow-2xl bg-[#0D0F12]/90 border border-[rgba(245,230,200,0.18)]">
+                            <!-- Unobscured Architect Portrait Frame -->
+                            <div class="relative aspect-[3/4] rounded-[16px] overflow-hidden bg-[#161B22] border border-[rgba(245,230,200,0.1)]">
+                                <img 
+                                    src="https://res.cloudinary.com/iscdlbxg/image/upload/v1790332667/profile_pixx.jpg" 
+                                    alt="H.O. Damilare Michael - Lead Web Architect & Systems Engineer" 
+                                    class="w-full h-full object-cover object-top transition-transform duration-700 hover:scale-105"
+                                    loading="eager"
+                                />
+                                <div class="absolute inset-0 bg-gradient-to-t from-[#0D0F12]/60 via-transparent to-transparent pointer-events-none"></div>
+                                <div class="absolute top-3 left-3 px-2.5 py-1 rounded-full bg-[#0D0F12]/85 text-[#E6C280] border border-[#E6C280]/30 text-[10px] font-mono font-bold backdrop-blur-md">
+                                    <i class="fas fa-code mr-1"></i> LEAD ARCHITECT
+                                </div>
+                            </div>
+
+                            <!-- Dedicated Name & Professional Credentials Below Photo -->
+                            <div class="pt-3 pb-1.5 px-1 text-center">
+                                <div class="text-[10px] uppercase tracking-wider text-[#E6C280] font-semibold font-mono">Systems Architecture &amp; Cloud Scalability</div>
+                                <h2 class="text-base font-bold text-[#F5E6C8] tracking-tight">H.O. Damilare Michael</h2>
+                                <p class="text-xs text-[#8B949E] mt-0.5">Specializing in React 19, Next.js, Cloudflare Edge &amp; High-Throughput APIs</p>
+                            </div>
+
+                            <!-- Telemetry Footprint -->
+                            <div class="mt-2.5 pt-2.5 border-t border-[rgba(245,230,200,0.1)] grid grid-cols-2 gap-2 text-center text-xs">
+                                <div class="bg-[#12161A]/80 p-2 rounded-lg border border-[rgba(245,230,200,0.06)]">
+                                    <div class="font-mono text-[#E6C280] font-bold">120+ Shipped</div>
+                                    <div class="text-[10px] text-[#8B949E]">Web Platforms</div>
+                                </div>
+                                <div class="bg-[#12161A]/80 p-2 rounded-lg border border-[rgba(245,230,200,0.06)]">
+                                    <div class="font-mono text-[#FFF3CD] font-bold">26 Repos</div>
+                                    <div class="text-[10px] text-[#8B949E]">Verified Codebases</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- GLOBAL INTRO VIDEO SECTION -->
+        <section id="intro-video" class="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+            <div class="text-center max-w-2xl mx-auto mb-10">
+                <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[#12161A]/85 border border-[#E6C280]/25 text-xs font-mono text-[#E6C280] mb-3">
+                    <i class="fas fa-play-circle text-[#FFF3CD]"></i>
+                    <span>ENGINEERING PHILOSOPHY &amp; ARCHITECTURAL METHODOLOGY</span>
+                </div>
+                <h2 class="text-2xl sm:text-3xl lg:text-4xl font-bold font-display text-[#F5E6C8]">
+                    A Direct Message from H.O. Damilare Michael
+                </h2>
+                <p class="text-sm text-[#A0AEC0] mt-2">
+                    Watch a walkthrough on engineering zero-debt full-stack platforms, modern cloud pipelines, and frictionless user experiences.
+                </p>
+            </div>
+
+            <div class="mho-intro-video-container relative aspect-video w-full rounded-2xl sm:rounded-3xl overflow-hidden border border-[#E6C280]/30 shadow-2xl group">
+                <div class="video-glow-ambient pointer-events-none" aria-hidden="true"></div>
+
+                <!-- NOTE: Replace the src below with your actual YouTube/Vimeo/MP4 video URL -->
+                <iframe 
+                    id="pageIntroVideoIframe"
+                    class="w-full h-full object-cover" 
+                    src="https://www.youtube.com/embed/JSl9UcDaywA?enablejsapi=1&amp;rel=0&amp;playsinline=1&amp;modestbranding=1" 
+                    title="Personal Intro Video - H.O. Damilare Michael" 
+                    frameborder="0" 
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                    allowfullscreen>
+                </iframe>
+
+                <div class="absolute top-4 left-4 z-10 flex items-center gap-2 pointer-events-none">
+                    <span class="px-2.5 py-1 rounded-full text-[11px] font-bold bg-[#0D0F12]/85 text-[#E6C280] border border-[#E6C280]/30 backdrop-blur-md">
+                        4K UHD // 60 FPS
+                    </span>
+                    <span class="px-2.5 py-1 rounded-full text-[11px] font-semibold bg-[#12161A]/85 text-[#F5E6C8] border border-[#F5E6C8]/20 backdrop-blur-md">
+                        02:45 min
+                    </span>
+                </div>
+
+                <button 
+                    type="button"
+                    class="video-play-pulse-btn trigger-intro-video" 
+                    data-video-url="https://www.youtube.com/embed/JSl9UcDaywA?autoplay=1&amp;playsinline=1&amp;rel=0&amp;modestbranding=1" 
+                    data-video-title="Web Architecture &amp; Scalability · H.O. Damilare Michael"
+                    aria-label="Play Full-Screen Intro Video">
+                    <i class="fas fa-play ml-1"></i>
+                </button>
+            </div>
+        </section>
+
+        <!-- 2. DUAL MOTION CAROUSELS SECTION -->
+        <!-- 2. DUAL MOTION CAROUSELS SECTION -->
+        <section id="dual-carousels" class="relative py-16 overflow-hidden">
+            <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 mb-8 text-center">
+                <span class="text-xs font-bold tracking-widest text-[#E6C280] uppercase">Dual Motion Showcase // 14 Production Streams</span>
+                <h2 class="text-3xl sm:text-4xl font-bold font-display text-[#F5E6C8] mt-2">
+                    Production Systems in Dual Counter-Flow
+                </h2>
+                <p class="text-xs sm:text-sm text-[#A0AEC0] max-w-xl mx-auto mt-2">
+                    14 high-performance enterprise architectures streaming in continuous dual counter-flow (7 per stream). Hover over any card to pause stream. Click to open comprehensive architectural specifications with live repository &amp; production demo links.
+                </p>
+            </div>
+
+            <!-- Top Carousel: Infinite Smooth Scroll Moving RIGHT (7 projects) -->
+            <div class="motion-carousel-container mb-6">
+                <div id="carouselTrackRight" class="motion-carousel-track-right">
+                    <!-- Populated dynamically via JS with duplicates for seamless loop -->
+                </div>
+            </div>
+
+            <!-- Bottom Carousel: Infinite Smooth Scroll Moving LEFT (7 projects) -->
+            <div class="motion-carousel-container">
+                <div id="carouselTrackLeft" class="motion-carousel-track-left">
+                    <!-- Populated dynamically via JS with duplicates for seamless loop -->
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. INTERACTIVE STACKED CARDS PORTFOLIO SECTION (Unified Full-Section Column Deck) -->
+        <section id="paginated-portfolio" class="w-full border-t border-[rgba(245,230,200,0.08)] relative overflow-visible bg-[#0D0F12]">
+            <div id="portfolioDeckWrapper" class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14 min-h-screen flex flex-col justify-center">
+                <!-- Section Header -->
+                <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-7">
+                    <div>
+                        <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#12161A]/85 border border-[#E6C280]/25 text-xs font-mono text-[#E6C280] mb-3">
+                            <span class="w-2 h-2 rounded-full bg-[#E6C280] animate-pulse"></span>
+                            <span>INTERACTIVE STACKED CARDS // 12 PRODUCTION ARCHITECTURES</span>
+                        </div>
+                        <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold font-display text-[#F5E6C8]">
+                            Architectural Systems Portfolio
+                        </h2>
+                        <p class="text-xs sm:text-sm text-[#A0AEC0] mt-2 max-w-2xl leading-relaxed">
+                            A curated suite of 12 full-stack architectures visibly stacked together. Scrolling down smoothly peels each card open to reveal the architecture underneath; scrolling in reverse restores the stack.
+                        </p>
+                    </div>
+
+                    <!-- Stats & Category Filter Controls -->
+                    <div class="flex flex-col sm:flex-row sm:items-center gap-3">
+                        <span id="stackedFilterCount" class="text-xs font-mono text-[#E6C280] px-3.5 py-1.5 rounded-full bg-[#12161A] border border-[#E6C280]/25 inline-flex items-center gap-1.5 shadow-[0_0_15px_rgba(230,194,128,0.1)]">
+                            <i class="fas fa-layer-group text-[10px]"></i>
+                            <span>12 Verified Architectures</span>
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Category Filter Pills -->
+                <div class="flex items-center gap-2 overflow-x-auto pb-3 mb-6 no-scrollbar" id="stackedCategoryFilter">
+                    <button type="button" class="stacked-filter-pill active" data-category="all">All Systems (12)</button>
+                    <button type="button" class="stacked-filter-pill" data-category="Enterprise Cloud Platforms">Cloud &amp; Edge</button>
+                    <button type="button" class="stacked-filter-pill" data-category="Interactive WebGL &amp; 3D Portals">3D &amp; WebGL</button>
+                    <button type="button" class="stacked-filter-pill" data-category="Custom Web Applications">Custom Apps &amp; SaaS</button>
+                    <button type="button" class="stacked-filter-pill" data-category="E-Commerce &amp; Luxury Catalogues">E-Commerce &amp; Luxury</button>
+                    <button type="button" class="stacked-filter-pill" data-category="High-Performance Landing Pages">High-Speed Landing</button>
+                </div>
+
+                <!-- Single Full-Section Column Interactive Stacked Architecture Showcase -->
+                <div class="w-full relative" id="portfolioDeckSection">
+                    <!-- Stack Controls / Top Deck Bar: Step Indicator & Navigation -->
+                    <div class="deck-top-bar flex items-center justify-between gap-4 mb-5 px-3 sm:px-4 py-2.5 rounded-2xl bg-[#12161E]/80 border border-[#E6C280]/20 backdrop-blur-md">
+                        <div class="flex items-center gap-2.5 min-w-0">
+                            <span class="text-xs font-mono text-[#E6C280] uppercase tracking-wider flex items-center gap-2 shrink-0">
+                                <i class="fas fa-layer-group text-[#E6C280]"></i>
+                                <span id="deckCurrentIndex">Card 01</span> of <span id="deckTotalCount">12</span>
+                            </span>
+                            <span class="hidden sm:inline-block w-1.5 h-1.5 rounded-full bg-[#E6C280]/40 shrink-0"></span>
+                            <span class="hidden sm:inline-block text-[11px] font-mono text-[#8B949E] truncate max-w-sm" id="deckActiveTitle">Xpera · Experience Intelligence Engine</span>
+                        </div>
+                        <!-- Progress Bar and Next/Prev Step Controls -->
+                        <div class="flex items-center gap-3 shrink-0">
+                            <div class="w-24 sm:w-36 h-1.5 rounded-full bg-white/10 overflow-hidden relative" title="Scroll Deck Progress">
+                                <div id="deckProgressBar" class="h-full bg-gradient-to-r from-[#E6C280] to-[#FFF3CD] transition-all duration-300" style="width: 8.33%;"></div>
+                            </div>
+                            <div class="flex items-center gap-1.5">
+                                <button type="button" id="deckPrevBtn" class="deck-nav-btn" aria-label="Previous card in stack" title="Previous Card (or Scroll Up)">
+                                    <i class="fas fa-chevron-up text-xs"></i>
+                                </button>
+                                <button type="button" id="deckNextBtn" class="deck-nav-btn" aria-label="Next card in stack" title="Next Card (or Scroll Down)">
+                                    <i class="fas fa-chevron-down text-xs"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Pinned Deck Stage: Single Column occupying full section width -->
+                    <div class="portfolio-deck-stage relative w-full" id="stackedCardsContainer">
+                        <!-- Rendered dynamically by initStackedProjectsSystem() -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. THE 5 CORE WEB DEVELOPMENT SERVICES: SCROLL-DRIVEN STACKED CARDS DECK -->
+        <section id="services-matrix" class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 my-24 relative">
+            <div class="text-center max-w-2xl mx-auto mb-16">
+                <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#12161A]/90 border border-[#E6C280]/25 text-xs font-mono text-[#E6C280] mb-3 shadow-lg">
+                    <span class="w-2 h-2 rounded-full bg-[#E6C280] animate-pulse"></span>
+                    <span>ARCHITECTURE &amp; SOLUTIONS // STACKED CAPABILITIES DECK</span>
+                </div>
+                <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold font-display text-[#F5E6C8] tracking-tight">
+                    Web Development &amp; Digital Solutions
+                </h2>
+                <p class="text-[#A0AEC0] text-sm sm:text-base mt-3 leading-relaxed">
+                    Scroll through our 5 core architectural disciplines. Each system stacks on the last, revealing complete engineering deliverables, production toolchains, and delivery guarantees.
+                </p>
+            </div>
+
+            <!-- Sticky Stacked Cards Viewport -->
+            <div class="stacked-cards-deck" id="servicesStackedDeck">
+
+                <!-- STACKED CARD 01: Full-Stack Web Architecture -->
+                <div class="stacked-deck-card p-6 sm:p-10 relative" data-card-index="0" style="--card-index: 0;">
+                    <div class="stacked-card-watermark" aria-hidden="true">01</div>
+                    <div class="relative z-10">
+                        <!-- Top Metadata Row -->
+                        <div class="flex flex-wrap items-center justify-between gap-4 mb-6 pb-5 border-b border-[rgba(245,230,200,0.1)]">
+                            <div class="flex items-center gap-3">
+                                <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-[#E6C280]/20 to-[#FFF3CD]/5 border border-[#E6C280]/30 text-[#E6C280] flex items-center justify-center text-xl shadow-lg shrink-0">
+                                    <i class="fas fa-layer-group"></i>
+                                </div>
+                                <div>
+                                    <span class="text-xs font-mono font-bold tracking-wider text-[#E6C280] uppercase block">
+                                        01 // FULL-STACK ARCHITECTURE
+                                    </span>
+                                    <span class="text-[11px] font-mono text-[#8B949E]">
+                                        SYSTEM DECK · STAGE 01 OF 05
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <span class="px-3 py-1 rounded-full bg-emerald-950/80 border border-emerald-500/30 text-emerald-400 text-xs font-mono font-semibold flex items-center gap-1.5">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping"></span>
+                                    <span>PRODUCTION READY</span>
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- Card Header & Engaging Copy -->
+                        <div class="max-w-3xl mb-8">
+                            <h3 class="text-2xl sm:text-3xl lg:text-4xl font-bold font-display text-[#F5E6C8] leading-tight mb-3">
+                                Custom Web Applications &amp; Enterprise SaaS Platforms
+                            </h3>
+                            <p class="text-sm sm:text-base text-[#C9D1D9] leading-relaxed">
+                                Architected for uncompromising performance and zero technical debt. Engineered with React 19, Next.js App Router, modular TypeScript micro-frontends, and real-time database synchronization to deliver frictionless, consumer-grade speed at enterprise scale.
+                            </p>
+                        </div>
+
+                        <!-- 3-Column Specifications Grid -->
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 pt-4 border-t border-[rgba(245,230,200,0.08)]">
+                            <div class="p-4 rounded-2xl bg-[#0D0F12]/70 border border-[rgba(245,230,200,0.06)]">
+                                <h4 class="font-bold text-xs font-mono uppercase tracking-wider text-[#E6C280] mb-3 flex items-center gap-2">
+                                    <i class="fas fa-check-circle text-xs text-[#FFF3CD]"></i> Core Deliverables
+                                </h4>
+                                <ul class="space-y-2 text-xs text-[#A0AEC0] leading-relaxed">
+                                    <li class="flex items-start gap-2">
+                                        <span class="text-[#E6C280]">•</span> Single-Page &amp; Server-Rendered Next.js Web Apps
+                                    </li>
+                                    <li class="flex items-start gap-2">
+                                        <span class="text-[#E6C280]">•</span> Zero-Trust Role-Based Access Control (RBAC) &amp; OAuth
+                                    </li>
+                                    <li class="flex items-start gap-2">
+                                        <span class="text-[#E6C280]">•</span> High-Throughput RESTful &amp; GraphQL Edge APIs
+                                    </li>
+                                    <li class="flex items-start gap-2">
+                                        <span class="text-[#E6C280]">•</span> Progressive Web App (PWA) Offline Caching Engine
+                                    </li>
+                                </ul>
+                            </div>
+
+                            <div class="p-4 rounded-2xl bg-[#0D0F12]/70 border border-[rgba(245,230,200,0.06)]">
+                                <h4 class="font-bold text-xs font-mono uppercase tracking-wider text-[#E6C280] mb-3 flex items-center gap-2">
+                                    <i class="fas fa-microchip text-xs text-[#FFF3CD]"></i> Production Toolchain
+                                </h4>
+                                <div class="flex flex-wrap gap-1.5">
+                                    <span class="px-2.5 py-1 rounded-lg bg-[#161B22] border border-[#E6C280]/20 text-xs font-mono text-[#F5E6C8]">TypeScript</span>
+                                    <span class="px-2.5 py-1 rounded-lg bg-[#161B22] border border-[#E6C280]/20 text-xs font-mono text-[#F5E6C8]">React 19</span>
+                                    <span class="px-2.5 py-1 rounded-lg bg-[#161B22] border border-[#E6C280]/20 text-xs font-mono text-[#F5E6C8]">Next.js</span>
+                                    <span class="px-2.5 py-1 rounded-lg bg-[#161B22] border border-[#E6C280]/20 text-xs font-mono text-[#F5E6C8]">Node.js</span>
+                                    <span class="px-2.5 py-1 rounded-lg bg-[#161B22] border border-[#E6C280]/20 text-xs font-mono text-[#F5E6C8]">PostgreSQL</span>
+                                    <span class="px-2.5 py-1 rounded-lg bg-[#161B22] border border-[#E6C280]/20 text-xs font-mono text-[#F5E6C8]">Supabase</span>
+                                    <span class="px-2.5 py-1 rounded-lg bg-[#161B22] border border-[#E6C280]/20 text-xs font-mono text-[#F5E6C8]">Tailwind CSS</span>
+                                </div>
+                            </div>
+
+                            <div class="p-4 rounded-2xl bg-[#0D0F12]/70 border border-[rgba(245,230,200,0.06)]">
+                                <h4 class="font-bold text-xs font-mono uppercase tracking-wider text-[#38BDF8] mb-3 flex items-center gap-2">
+                                    <i class="fas fa-shield-alt text-xs text-[#38BDF8]"></i> SLA &amp; Guarantees
+                                </h4>
+                                <div class="text-xs font-mono text-[#E6C280] font-bold mb-1">99.98% Edge Availability</div>
+                                <p class="text-xs text-[#A0AEC0] leading-relaxed mb-3">
+                                    Sub-second Time to Interactive (TTI), Google Lighthouse scores routinely exceeding 95, and zero structural bloat.
+                                </p>
+                                <a href="#contact-tech" class="inline-flex items-center gap-1.5 text-xs font-bold text-[#E6C280] hover:text-[#FFF3CD] transition-colors">
+                                    <span>Discuss Custom Build</span>
+                                    <i class="fas fa-arrow-right text-[10px]"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- STACKED CARD 02: Marketplace Platforms -->
+                <div class="stacked-deck-card p-6 sm:p-10 relative" data-card-index="1" style="--card-index: 1;">
+                    <div class="stacked-card-watermark" aria-hidden="true">02</div>
+                    <div class="relative z-10">
+                        <div class="flex flex-wrap items-center justify-between gap-4 mb-6 pb-5 border-b border-[rgba(245,230,200,0.1)]">
+                            <div class="flex items-center gap-3">
+                                <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-[#E6C280]/20 to-[#FFF3CD]/5 border border-[#E6C280]/30 text-[#E6C280] flex items-center justify-center text-xl shadow-lg shrink-0">
+                                    <i class="fas fa-store"></i>
+                                </div>
+                                <div>
+                                    <span class="text-xs font-mono font-bold tracking-wider text-[#E6C280] uppercase block">
+                                        02 // MULTI-VENDOR COMMERCE
+                                    </span>
+                                    <span class="text-[11px] font-mono text-[#8B949E]">
+                                        SYSTEM DECK · STAGE 02 OF 05
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <span class="px-3 py-1 rounded-full bg-[#12161A] border border-[#E6C280]/30 text-[#E6C280] text-xs font-mono font-semibold">
+                                    HIGH-THROUGHPUT ENGINE
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="max-w-3xl mb-8">
+                            <h3 class="text-2xl sm:text-3xl lg:text-4xl font-bold font-display text-[#F5E6C8] leading-tight mb-3">
+                                Marketplace Platforms &amp; Bespoke E-Commerce Engines
+                            </h3>
+                            <p class="text-sm sm:text-base text-[#C9D1D9] leading-relaxed">
+                                Robust multi-seller systems engineered to manage massive catalog volumes and high-concurrency order surges. Integrated with automated vendor escrows, instant stock telemetries, and sub-millisecond faceted search.
+                            </p>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 pt-4 border-t border-[rgba(245,230,200,0.08)]">
+                            <div class="p-4 rounded-2xl bg-[#0D0F12]/70 border border-[rgba(245,230,200,0.06)]">
+                                <h4 class="font-bold text-xs font-mono uppercase tracking-wider text-[#E6C280] mb-3 flex items-center gap-2">
+                                    <i class="fas fa-check-circle text-xs text-[#FFF3CD]"></i> Core Deliverables
+                                </h4>
+                                <ul class="space-y-2 text-xs text-[#A0AEC0] leading-relaxed">
+                                    <li class="flex items-start gap-2">
+                                        <span class="text-[#E6C280]">•</span> Multi-tenant vendor onboarding portals &amp; analytics
+                                    </li>
+                                    <li class="flex items-start gap-2">
+                                        <span class="text-[#E6C280]">•</span> Stripe Connect automated split payouts &amp; commissions
+                                    </li>
+                                    <li class="flex items-start gap-2">
+                                        <span class="text-[#E6C280]">•</span> Real-time warehouse inventory sync &amp; alerts
+                                    </li>
+                                    <li class="flex items-start gap-2">
+                                        <span class="text-[#E6C280]">•</span> Algolia instant faceted product filtering
+                                    </li>
+                                </ul>
+                            </div>
+
+                            <div class="p-4 rounded-2xl bg-[#0D0F12]/70 border border-[rgba(245,230,200,0.06)]">
+                                <h4 class="font-bold text-xs font-mono uppercase tracking-wider text-[#E6C280] mb-3 flex items-center gap-2">
+                                    <i class="fas fa-microchip text-xs text-[#FFF3CD]"></i> Primary Tech Stack
+                                </h4>
+                                <div class="flex flex-wrap gap-1.5">
+                                    <span class="px-2.5 py-1 rounded-lg bg-[#161B22] border border-[#E6C280]/20 text-xs font-mono text-[#F5E6C8]">Stripe Connect</span>
+                                    <span class="px-2.5 py-1 rounded-lg bg-[#161B22] border border-[#E6C280]/20 text-xs font-mono text-[#F5E6C8]">MedusaJS</span>
+                                    <span class="px-2.5 py-1 rounded-lg bg-[#161B22] border border-[#E6C280]/20 text-xs font-mono text-[#F5E6C8]">Shopify Plus</span>
+                                    <span class="px-2.5 py-1 rounded-lg bg-[#161B22] border border-[#E6C280]/20 text-xs font-mono text-[#F5E6C8]">Next.js Commerce</span>
+                                    <span class="px-2.5 py-1 rounded-lg bg-[#161B22] border border-[#E6C280]/20 text-xs font-mono text-[#F5E6C8]">Redis Cache</span>
+                                </div>
+                            </div>
+
+                            <div class="p-4 rounded-2xl bg-[#0D0F12]/70 border border-[rgba(245,230,200,0.06)]">
+                                <h4 class="font-bold text-xs font-mono uppercase tracking-wider text-[#38BDF8] mb-3 flex items-center gap-2">
+                                    <i class="fas fa-shield-alt text-xs text-[#38BDF8]"></i> Impact Guarantee
+                                </h4>
+                                <div class="text-xs font-mono text-[#E6C280] font-bold mb-1">Zero Transaction Loss</div>
+                                <p class="text-xs text-[#A0AEC0] leading-relaxed mb-3">
+                                    Seamless multi-currency settlements with automated retry queues and resilient webhook event logging.
+                                </p>
+                                <a href="#contact-tech" class="inline-flex items-center gap-1.5 text-xs font-bold text-[#E6C280] hover:text-[#FFF3CD] transition-colors">
+                                    <span>Plan E-Commerce Architecture</span>
+                                    <i class="fas fa-arrow-right text-[10px]"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- STACKED CARD 03: CMS Builds -->
+                <div class="stacked-deck-card p-6 sm:p-10 relative" data-card-index="2" style="--card-index: 2;">
+                    <div class="stacked-card-watermark" aria-hidden="true">03</div>
+                    <div class="relative z-10">
+                        <div class="flex flex-wrap items-center justify-between gap-4 mb-6 pb-5 border-b border-[rgba(245,230,200,0.1)]">
+                            <div class="flex items-center gap-3">
+                                <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-[#E6C280]/20 to-[#FFF3CD]/5 border border-[#E6C280]/30 text-[#E6C280] flex items-center justify-center text-xl shadow-lg shrink-0">
+                                    <i class="fas fa-cubes"></i>
+                                </div>
+                                <div>
+                                    <span class="text-xs font-mono font-bold tracking-wider text-[#E6C280] uppercase block">
+                                        03 // CONTENT INFRASTRUCTURE
+                                    </span>
+                                    <span class="text-[11px] font-mono text-[#8B949E]">
+                                        SYSTEM DECK · STAGE 03 OF 05
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <span class="px-3 py-1 rounded-full bg-[#12161A] border border-[#E6C280]/30 text-[#E6C280] text-xs font-mono font-semibold">
+                                    DECOUPLED PUBLISHING
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="max-w-3xl mb-8">
+                            <h3 class="text-2xl sm:text-3xl lg:text-4xl font-bold font-display text-[#F5E6C8] leading-tight mb-3">
+                                CMS Ecosystems: Headless WordPress, Strapi &amp; Wix Studio
+                            </h3>
+                            <p class="text-sm sm:text-base text-[#C9D1D9] leading-relaxed">
+                                Empowering marketing and editorial teams with intuitive content workspaces while delivering blazing static and server-rendered frontend performance via modern GraphQL pipelines.
+                            </p>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 pt-4 border-t border-[rgba(245,230,200,0.08)]">
+                            <div class="p-4 rounded-2xl bg-[#0D0F12]/70 border border-[rgba(245,230,200,0.06)]">
+                                <h4 class="font-bold text-xs font-mono uppercase tracking-wider text-[#E6C280] mb-3 flex items-center gap-2">
+                                    <i class="fas fa-check-circle text-xs text-[#FFF3CD]"></i> Core Deliverables
+                                </h4>
+                                <ul class="space-y-2 text-xs text-[#A0AEC0] leading-relaxed">
+                                    <li class="flex items-start gap-2">
+                                        <span class="text-[#E6C280]">•</span> Headless WordPress GraphQL backend paired with Next.js
+                                    </li>
+                                    <li class="flex items-start gap-2">
+                                        <span class="text-[#E6C280]">•</span> Custom Wix Studio dynamic architectures &amp; Velo scripts
+                                    </li>
+                                    <li class="flex items-start gap-2">
+                                        <span class="text-[#E6C280]">•</span> Comprehensive Schema.org JSON-LD structure for rich snippets
+                                    </li>
+                                    <li class="flex items-start gap-2">
+                                        <span class="text-[#E6C280]">•</span> Role-restricted client editorial dashboards
+                                    </li>
+                                </ul>
+                            </div>
+
+                            <div class="p-4 rounded-2xl bg-[#0D0F12]/70 border border-[rgba(245,230,200,0.06)]">
+                                <h4 class="font-bold text-xs font-mono uppercase tracking-wider text-[#E6C280] mb-3 flex items-center gap-2">
+                                    <i class="fas fa-microchip text-xs text-[#FFF3CD]"></i> Primary Tech Stack
+                                </h4>
+                                <div class="flex flex-wrap gap-1.5">
+                                    <span class="px-2.5 py-1 rounded-lg bg-[#161B22] border border-[#E6C280]/20 text-xs font-mono text-[#F5E6C8]">WordPress REST/GraphQL</span>
+                                    <span class="px-2.5 py-1 rounded-lg bg-[#161B22] border border-[#E6C280]/20 text-xs font-mono text-[#F5E6C8]">Wix Studio Velo</span>
+                                    <span class="px-2.5 py-1 rounded-lg bg-[#161B22] border border-[#E6C280]/20 text-xs font-mono text-[#F5E6C8]">Sanity.io</span>
+                                    <span class="px-2.5 py-1 rounded-lg bg-[#161B22] border border-[#E6C280]/20 text-xs font-mono text-[#F5E6C8]">Strapi</span>
+                                    <span class="px-2.5 py-1 rounded-lg bg-[#161B22] border border-[#E6C280]/20 text-xs font-mono text-[#F5E6C8]">Next.js</span>
+                                </div>
+                            </div>
+
+                            <div class="p-4 rounded-2xl bg-[#0D0F12]/70 border border-[rgba(245,230,200,0.06)]">
+                                <h4 class="font-bold text-xs font-mono uppercase tracking-wider text-[#38BDF8] mb-3 flex items-center gap-2">
+                                    <i class="fas fa-shield-alt text-xs text-[#38BDF8]"></i> Impact Guarantee
+                                </h4>
+                                <div class="text-xs font-mono text-[#E6C280] font-bold mb-1">&lt;3 Min Publishing Speed</div>
+                                <p class="text-xs text-[#A0AEC0] leading-relaxed mb-3">
+                                    Non-technical staff can deploy articles and media pages with complete visual confidence and zero broken styling.
+                                </p>
+                                <a href="#contact-tech" class="inline-flex items-center gap-1.5 text-xs font-bold text-[#E6C280] hover:text-[#FFF3CD] transition-colors">
+                                    <span>Modernize Your CMS</span>
+                                    <i class="fas fa-arrow-right text-[10px]"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- STACKED CARD 04: Email & Workflow Automations -->
+                <div class="stacked-deck-card p-6 sm:p-10 relative" data-card-index="3" style="--card-index: 3;">
+                    <div class="stacked-card-watermark" aria-hidden="true">04</div>
+                    <div class="relative z-10">
+                        <div class="flex flex-wrap items-center justify-between gap-4 mb-6 pb-5 border-b border-[rgba(245,230,200,0.1)]">
+                            <div class="flex items-center gap-3">
+                                <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-[#E6C280]/20 to-[#FFF3CD]/5 border border-[#E6C280]/30 text-[#E6C280] flex items-center justify-center text-xl shadow-lg shrink-0">
+                                    <i class="fas fa-bolt"></i>
+                                </div>
+                                <div>
+                                    <span class="text-xs font-mono font-bold tracking-wider text-[#E6C280] uppercase block">
+                                        04 // AUTOMATED CONVERSION
+                                    </span>
+                                    <span class="text-[11px] font-mono text-[#8B949E]">
+                                        SYSTEM DECK · STAGE 04 OF 05
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <span class="px-3 py-1 rounded-full bg-[#12161A] border border-[#E6C280]/30 text-[#E6C280] text-xs font-mono font-semibold">
+                                    DYNAMIC BEHAVIORAL TRIGGERS
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="max-w-3xl mb-8">
+                            <h3 class="text-2xl sm:text-3xl lg:text-4xl font-bold font-display text-[#F5E6C8] leading-tight mb-3">
+                                Email Automations &amp; High-Volume CRM Funnels
+                            </h3>
+                            <p class="text-sm sm:text-base text-[#C9D1D9] leading-relaxed">
+                                Transforming automated communication into a dependable revenue driver. We configure multi-branch behavioral funnels, real-time webhook routing, and deep customer lifetime value synchronizations.
+                            </p>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 pt-4 border-t border-[rgba(245,230,200,0.08)]">
+                            <div class="p-4 rounded-2xl bg-[#0D0F12]/70 border border-[rgba(245,230,200,0.06)]">
+                                <h4 class="font-bold text-xs font-mono uppercase tracking-wider text-[#E6C280] mb-3 flex items-center gap-2">
+                                    <i class="fas fa-check-circle text-xs text-[#FFF3CD]"></i> Core Deliverables
+                                </h4>
+                                <ul class="space-y-2 text-xs text-[#A0AEC0] leading-relaxed">
+                                    <li class="flex items-start gap-2">
+                                        <span class="text-[#E6C280]">•</span> Multi-step browse and abandoned cart recovery sequences
+                                    </li>
+                                    <li class="flex items-start gap-2">
+                                        <span class="text-[#E6C280]">•</span> Dynamic customer segmentation and RFM behavioral scoring
+                                    </li>
+                                    <li class="flex items-start gap-2">
+                                        <span class="text-[#E6C280]">•</span> Low-latency webhook relays connecting to HubSpot and Make.com
+                                    </li>
+                                    <li class="flex items-start gap-2">
+                                        <span class="text-[#E6C280]">•</span> Dark-mode optimized, responsive email layouts
+                                    </li>
+                                </ul>
+                            </div>
+
+                            <div class="p-4 rounded-2xl bg-[#0D0F12]/70 border border-[rgba(245,230,200,0.06)]">
+                                <h4 class="font-bold text-xs font-mono uppercase tracking-wider text-[#E6C280] mb-3 flex items-center gap-2">
+                                    <i class="fas fa-microchip text-xs text-[#FFF3CD]"></i> Primary Tech Stack
+                                </h4>
+                                <div class="flex flex-wrap gap-1.5">
+                                    <span class="px-2.5 py-1 rounded-lg bg-[#161B22] border border-[#E6C280]/20 text-xs font-mono text-[#F5E6C8]">Klaviyo API</span>
+                                    <span class="px-2.5 py-1 rounded-lg bg-[#161B22] border border-[#E6C280]/20 text-xs font-mono text-[#F5E6C8]">Make.com</span>
+                                    <span class="px-2.5 py-1 rounded-lg bg-[#161B22] border border-[#E6C280]/20 text-xs font-mono text-[#F5E6C8]">HubSpot CRM</span>
+                                    <span class="px-2.5 py-1 rounded-lg bg-[#161B22] border border-[#E6C280]/20 text-xs font-mono text-[#F5E6C8]">Custom Webhooks</span>
+                                </div>
+                            </div>
+
+                            <div class="p-4 rounded-2xl bg-[#0D0F12]/70 border border-[rgba(245,230,200,0.06)]">
+                                <h4 class="font-bold text-xs font-mono uppercase tracking-wider text-[#38BDF8] mb-3 flex items-center gap-2">
+                                    <i class="fas fa-shield-alt text-xs text-[#38BDF8]"></i> Impact Guarantee
+                                </h4>
+                                <div class="text-xs font-mono text-[#E6C280] font-bold mb-1">30%+ Automated Revenue</div>
+                                <p class="text-xs text-[#A0AEC0] leading-relaxed mb-3">
+                                    Strict inbox deliverability configurations (SPF, DKIM, DMARC) with automated re-engagement safeguards.
+                                </p>
+                                <a href="#contact-tech" class="inline-flex items-center gap-1.5 text-xs font-bold text-[#E6C280] hover:text-[#FFF3CD] transition-colors">
+                                    <span>Scale Email Automation</span>
+                                    <i class="fas fa-arrow-right text-[10px]"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- STACKED CARD 05: Online Course Platforms & LMS -->
+                <div class="stacked-deck-card p-6 sm:p-10 relative" data-card-index="4" style="--card-index: 4;">
+                    <div class="stacked-card-watermark" aria-hidden="true">05</div>
+                    <div class="relative z-10">
+                        <div class="flex flex-wrap items-center justify-between gap-4 mb-6 pb-5 border-b border-[rgba(245,230,200,0.1)]">
+                            <div class="flex items-center gap-3">
+                                <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-[#E6C280]/20 to-[#FFF3CD]/5 border border-[#E6C280]/30 text-[#E6C280] flex items-center justify-center text-xl shadow-lg shrink-0">
+                                    <i class="fas fa-graduation-cap"></i>
+                                </div>
+                                <div>
+                                    <span class="text-xs font-mono font-bold tracking-wider text-[#E6C280] uppercase block">
+                                        05 // DIGITAL ACADEMIES
+                                    </span>
+                                    <span class="text-[11px] font-mono text-[#8B949E]">
+                                        SYSTEM DECK · STAGE 05 OF 05
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <span class="px-3 py-1 rounded-full bg-[#12161A] border border-[#E6C280]/30 text-[#E6C280] text-xs font-mono font-semibold">
+                                    ENTERPRISE E-LEARNING
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="max-w-3xl mb-8">
+                            <h3 class="text-2xl sm:text-3xl lg:text-4xl font-bold font-display text-[#F5E6C8] leading-tight mb-3">
+                                Custom Learning Management Systems &amp; Educational Portals
+                            </h3>
+                            <p class="text-sm sm:text-base text-[#C9D1D9] leading-relaxed">
+                                Bespoke educational infrastructure engineered for maximum student completion rates. Featuring protected DRM video streams, subscription access control, automated certifications, and interactive evaluations.
+                            </p>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 pt-4 border-t border-[rgba(245,230,200,0.08)]">
+                            <div class="p-4 rounded-2xl bg-[#0D0F12]/70 border border-[rgba(245,230,200,0.06)]">
+                                <h4 class="font-bold text-xs font-mono uppercase tracking-wider text-[#E6C280] mb-3 flex items-center gap-2">
+                                    <i class="fas fa-check-circle text-xs text-[#FFF3CD]"></i> Core Deliverables
+                                </h4>
+                                <ul class="space-y-2 text-xs text-[#A0AEC0] leading-relaxed">
+                                    <li class="flex items-start gap-2">
+                                        <span class="text-[#E6C280]">•</span> Protected member dashboard with tiered subscription gating
+                                    </li>
+                                    <li class="flex items-start gap-2">
+                                        <span class="text-[#E6C280]">•</span> Fast adaptive video streaming (HLS &amp; Cloudflare Stream)
+                                    </li>
+                                    <li class="flex items-start gap-2">
+                                        <span class="text-[#E6C280]">•</span> Automated cryptographic PDF certificate generation upon course completion
+                                    </li>
+                                    <li class="flex items-start gap-2">
+                                        <span class="text-[#E6C280]">•</span> Community forums, student chat, and homework assignments
+                                    </li>
+                                </ul>
+                            </div>
+
+                            <div class="p-4 rounded-2xl bg-[#0D0F12]/70 border border-[rgba(245,230,200,0.06)]">
+                                <h4 class="font-bold text-xs font-mono uppercase tracking-wider text-[#E6C280] mb-3 flex items-center gap-2">
+                                    <i class="fas fa-microchip text-xs text-[#FFF3CD]"></i> Primary Tech Stack
+                                </h4>
+                                <div class="flex flex-wrap gap-1.5">
+                                    <span class="px-2.5 py-1 rounded-lg bg-[#161B22] border border-[#E6C280]/20 text-xs font-mono text-[#F5E6C8]">Custom LMS</span>
+                                    <span class="px-2.5 py-1 rounded-lg bg-[#161B22] border border-[#E6C280]/20 text-xs font-mono text-[#F5E6C8]">LearnDash</span>
+                                    <span class="px-2.5 py-1 rounded-lg bg-[#161B22] border border-[#E6C280]/20 text-xs font-mono text-[#F5E6C8]">Cloudflare Stream</span>
+                                    <span class="px-2.5 py-1 rounded-lg bg-[#161B22] border border-[#E6C280]/20 text-xs font-mono text-[#F5E6C8]">Stripe Billing</span>
+                                    <span class="px-2.5 py-1 rounded-lg bg-[#161B22] border border-[#E6C280]/20 text-xs font-mono text-[#F5E6C8]">WebSockets</span>
+                                </div>
+                            </div>
+
+                            <div class="p-4 rounded-2xl bg-[#0D0F12]/70 border border-[rgba(245,230,200,0.06)]">
+                                <h4 class="font-bold text-xs font-mono uppercase tracking-wider text-[#38BDF8] mb-3 flex items-center gap-2">
+                                    <i class="fas fa-shield-alt text-xs text-[#38BDF8]"></i> Impact Guarantee
+                                </h4>
+                                <div class="text-xs font-mono text-[#E6C280] font-bold mb-1">Zero Video Leaks &amp; Piracy</div>
+                                <p class="text-xs text-[#A0AEC0] leading-relaxed mb-3">
+                                    Ultra-fast, zero-buffering playback across mobile and desktop devices with adaptive bitrate streaming.
+                                </p>
+                                <a href="#contact-tech" class="inline-flex items-center gap-1.5 text-xs font-bold text-[#E6C280] hover:text-[#FFF3CD] transition-colors">
+                                    <span>Build Digital Academy</span>
+                                    <i class="fas fa-arrow-right text-[10px]"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- 5. FREQUENTLY ASKED QUESTIONS (WEB ARCHITECTURE FAQ) -->
+        <section id="faq" class="faq-section relative py-20 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto">
+            <div class="text-center max-w-2xl mx-auto mb-12">
+                <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[#12161A]/90 border border-[#E6C280]/25 text-xs font-mono text-[#E6C280] mb-3 shadow-lg">
+                    <span class="w-2 h-2 rounded-full bg-[#E6C280] animate-pulse"></span>
+                    <span>TECHNICAL INTELLIGENCE // WEB ARCHITECTURE FAQ</span>
+                </div>
+                <h2 class="text-3xl sm:text-4xl font-bold font-display text-[#F5E6C8] tracking-tight">
+                    Architecture &amp; Engineering Inquiries
+                </h2>
+                <p class="text-xs sm:text-sm text-[#A0AEC0] mt-2 leading-relaxed">
+                    Technical standards, edge deployment protocols, code handoffs, and performance benchmarks for custom digital platforms.
+                </p>
+            </div>
+
+            <div class="accordion-group space-y-4">
+                <!-- FAQ Item 1 -->
+                <div class="faq-accordion-item">
+                    <button type="button" class="accordion-trigger" aria-expanded="false" aria-controls="faq-web-1">
+                        <span class="faq-question-text text-sm sm:text-base font-semibold">
+                            What architectural principles and frameworks guide your engineering?
+                        </span>
+                        <span class="accordion-icon" aria-hidden="true">
+                            <i class="fas fa-chevron-down text-xs"></i>
+                        </span>
+                    </button>
+                    <div id="faq-web-1" class="accordion-content" role="region">
+                        <div class="faq-answer-inner">
+                            Every system is architected with modern modularity, type safety, and zero bloat: Next.js App Router, React 19, TypeScript, Tailwind CSS, PostgreSQL, and GSAP/WebGL for hardware-accelerated animations. Codebases emphasize atomic component design and strict clean architecture.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FAQ Item 2 -->
+                <div class="faq-accordion-item">
+                    <button type="button" class="accordion-trigger" aria-expanded="false" aria-controls="faq-web-2">
+                        <span class="faq-question-text text-sm sm:text-base font-semibold">
+                            How do you guarantee 99.9% uptime, sub-second load times, and edge performance?
+                        </span>
+                        <span class="accordion-icon" aria-hidden="true">
+                            <i class="fas fa-chevron-down text-xs"></i>
+                        </span>
+                    </button>
+                    <div id="faq-web-2" class="accordion-content" role="region">
+                        <div class="faq-answer-inner">
+                            We deploy on global edge networks (Cloudflare, Vercel, Netlify) with asset streaming, smart caching policies, automated Brotli compression, and minimal client runtime overhead, routinely scoring 95+ on Google Core Web Vitals.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FAQ Item 3 -->
+                <div class="faq-accordion-item">
+                    <button type="button" class="accordion-trigger" aria-expanded="false" aria-controls="faq-web-3">
+                        <span class="faq-question-text text-sm sm:text-base font-semibold">
+                            Are all 26 projects in your showcase portfolio active, authentic, and inspectable?
+                        </span>
+                        <span class="accordion-icon" aria-hidden="true">
+                            <i class="fas fa-chevron-down text-xs"></i>
+                        </span>
+                    </button>
+                    <div id="faq-web-3" class="accordion-content" role="region">
+                        <div class="faq-answer-inner">
+                            Yes, every single system in the showcase links to its authentic GitHub repository and corresponding live production deployment (including Xpera at Xpera.io). Projects without active public hosting clearly indicate offline status with zero fake links.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FAQ Item 4 -->
+                <div class="faq-accordion-item">
+                    <button type="button" class="accordion-trigger" aria-expanded="false" aria-controls="faq-web-4">
+                        <span class="faq-question-text text-sm sm:text-base font-semibold">
+                            What is your software development lifecycle, testing methodology, and code handoff?
+                        </span>
+                        <span class="accordion-icon" aria-hidden="true">
+                            <i class="fas fa-chevron-down text-xs"></i>
+                        </span>
+                    </button>
+                    <div id="faq-web-4" class="accordion-content" role="region">
+                        <div class="faq-answer-inner">
+                            Projects follow a structured lifecycle: Architecture Specification, Interactive Wireframing, Sprint Development, Unit/E2E Testing, and Automated CI/CD Deployment. Handoff includes full git histories, environment setup manuals, and architecture documentation.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FAQ Item 5 -->
+                <div class="faq-accordion-item">
+                    <button type="button" class="accordion-trigger" aria-expanded="false" aria-controls="faq-web-5">
+                        <span class="faq-question-text text-sm sm:text-base font-semibold">
+                            Can you architect custom API integrations, automated webhooks, and payment gateways?
+                        </span>
+                        <span class="accordion-icon" aria-hidden="true">
+                            <i class="fas fa-chevron-down text-xs"></i>
+                        </span>
+                    </button>
+                    <div id="faq-web-5" class="accordion-content" role="region">
+                        <div class="faq-answer-inner">
+                            Yes, we build resilient webhook orchestrations, Stripe/PayPal payment systems, headless CMS connectors (WordPress, Strapi, Sanity), CRM synchronizations, and custom REST/GraphQL endpoints with rate limiting and automated retry queues.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FAQ Item 6 -->
+                <div class="faq-accordion-item">
+                    <button type="button" class="accordion-trigger" aria-expanded="false" aria-controls="faq-web-6">
+                        <span class="faq-question-text text-sm sm:text-base font-semibold">
+                            Do you provide technical NDAs, ongoing maintenance SLAs, and cloud security monitoring?
+                        </span>
+                        <span class="accordion-icon" aria-hidden="true">
+                            <i class="fas fa-chevron-down text-xs"></i>
+                        </span>
+                    </button>
+                    <div id="faq-web-6" class="accordion-content" role="region">
+                        <div class="faq-answer-inner">
+                            Mutual non-disclosure agreements (NDAs) are provided before project discovery commences. We also offer monthly maintenance SLAs covering security patches, dependency updates, uptime monitoring, and SLA incident response.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- 6. DIRECT CHANNELS & CONSULTATION INITIATION -->
+        <section id="contact-tech" class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 my-24">
+            <div class="glass-container p-8 sm:p-12 relative overflow-hidden text-center">
+                <div class="absolute -top-32 -right-32 w-80 h-80 bg-[#E6C280]/10 rounded-full blur-[100px] pointer-events-none"></div>
+
+                <div class="max-w-2xl mx-auto mb-8">
+                    <span class="text-xs font-mono font-bold tracking-widest text-[#E6C280] uppercase">Direct Engagement</span>
+                    <h2 class="text-3xl sm:text-4xl font-bold font-display text-[#F5E6C8] mt-2">
+                        Initiate an Engineering Consultation
+                    </h2>
+                    <p class="text-sm text-[#A0AEC0] mt-3 leading-relaxed">
+                        Connect directly with H.O. Damilare Michael on code architecture, cloud scaling, or bespoke automations. Mutual NDAs provided before discovery commences.
+                    </p>
+                </div>
+
+                <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+                    <button type="button" class="trigger-contact-modal px-8 py-4 rounded-full bg-[#E6C280] text-[#0D0F12] font-bold text-sm hover:bg-[#FFF3CD] hover:shadow-[0_0_25px_rgba(230,194,128,0.5)] transition-all flex items-center justify-center gap-2.5">
+                        <i class="fab fa-whatsapp text-lg"></i>
+                        <span>Open Direct Channels (WhatsApp, Email &amp; Social)</span>
+                    </button>
+                    <a href="https://github.com/Oloxa" target="_blank" rel="noopener noreferrer" class="px-7 py-4 rounded-full bg-[#161B22] text-[#F5E6C8] hover:text-[#FFF3CD] border border-[rgba(245,230,200,0.18)] hover:border-[#E6C280] text-sm font-bold transition-all flex items-center justify-center gap-2">
+                        <i class="fab fa-github text-base"></i>
+                        <span>Browse 26 Repositories</span>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- INTERACTIVE EXPANDABLE PROJECT MODAL -->
+    <div id="mhoProjectModal" class="mho-modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="modalProjectTitle">
+        <div class="mho-modal-card p-6 sm:p-8 relative">
+            <button id="closeProjectModalBtn" type="button" class="absolute top-5 right-5 w-9 h-9 rounded-full bg-[#1A2026] text-[#F5E6C8] hover:text-[#FFF3CD] hover:bg-[#E6C280]/20 flex items-center justify-center transition-colors" aria-label="Close Project Modal">
+                <i class="fas fa-times"></i>
+            </button>
+            <div class="mb-4">
+                <span id="modalProjectCategory" class="text-xs font-semibold text-[#E6C280] uppercase tracking-wider block mb-1">
+                    System Architecture
+                </span>
+                <h3 id="modalProjectTitle" class="text-xl sm:text-2xl font-bold text-[#F5E6C8]">
+                    Enterprise Platform
+                </h3>
+            </div>
+            <div class="h-64 sm:h-80 w-full rounded-2xl overflow-hidden bg-black/60 mb-5 border border-[#E6C280]/20 relative">
+                <img id="modalProjectImage" src="" alt="Project Preview Mockup" class="w-full h-full object-cover">
+                <div class="absolute inset-0 bg-gradient-to-t from-[#12161A] via-transparent to-transparent opacity-60"></div>
+            </div>
+            <div class="mb-6">
+                <h4 class="text-xs font-bold text-[#A0AEC0] uppercase tracking-wider mb-2">Technical Overview</h4>
+                <p id="modalProjectDesc" class="text-sm text-[#C9D1D9] leading-relaxed">
+                    Detailed architectural specifications.
+                </p>
+            </div>
+            <div class="mb-6">
+                <h4 class="text-xs font-bold text-[#A0AEC0] uppercase tracking-wider mb-2">Technology &amp; Protocols</h4>
+                <div id="modalProjectTags" class="flex flex-wrap gap-2">
+                    <!-- Populated dynamically via JS -->
+                </div>
+            </div>
+            <!-- Action Buttons: GitHub & Live Website -->
+            <div class="pt-5 border-t border-[rgba(245,230,200,0.1)] flex flex-wrap items-center justify-between gap-4">
+                <a id="modalGithubBtn" href="https://github.com/Oloxa" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#161B22] text-[#F5E6C8] hover:text-[#FFF3CD] border border-[#F5E6C8]/20 hover:border-[#E6C280] text-xs font-bold transition-all">
+                    <i class="fab fa-github text-sm"></i>
+                    <span>Check on GitHub</span>
+                </a>
+                <a id="modalLiveBtn" href="#" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#E6C280] text-[#0D0F12] hover:bg-[#FFF3CD] text-xs font-bold transition-all shadow-[0_0_15px_rgba(230,194,128,0.4)]">
+                    <i class="fas fa-external-link-alt text-xs"></i>
+                    <span>Live Website</span>
+                </a>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- ==========================================================================
+         SELECTED WORK — PROOF OF WORK 3D PERSPECTIVE SHOWCASE (DIRECTLY BEFORE FOOTER)
+         ========================================================================== -->
+    <section class="selected-work-section" id="selected-work" aria-label="Selected Work — Proof of Work Showcase">
+        <div class="selected-work-sticky-frame">
+            <!-- Atmospheric Lighting & Reflective Floor -->
+            <div class="sw-ambient-glow" aria-hidden="true"></div>
+            <div class="sw-floor-reflection" aria-hidden="true"></div>
+
+            <!-- Top Header & Controls Row -->
+            <div class="sw-header-row">
+                <div>
+                    <div class="sw-kicker">
+                        <span class="sw-kicker-line" aria-hidden="true"></span>
+                        <span>Verified Client Engagements</span>
+                    </div>
+                    <h2 class="sw-heading">Selected Work<span class="sw-heading-accent">.</span></h2>
+                    <p class="sw-subtext">A curated record of verified client engagements, transformative architectures, and measurable commercial results.</p>
+                </div>
+
+                <div class="sw-controls-box" aria-label="Selected Work Navigation">
+                    <div class="sw-counter" aria-live="polite">
+                        <span class="sw-active-index">01</span>
+                        <span class="sw-counter-sep">/</span>
+                        <span class="sw-total-count">07</span>
+                    </div>
+                    <button type="button" class="sw-nav-btn sw-prev-btn" aria-label="Previous Case Study">
+                        <i class="fas fa-chevron-left" aria-hidden="true"></i>
+                    </button>
+                    <button type="button" class="sw-nav-btn sw-next-btn" aria-label="Next Case Study">
+                        <i class="fas fa-chevron-right" aria-hidden="true"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- 3D Perspective Card Stage -->
+            <div class="sw-stage-container">
+                <div class="sw-cards-track">
+
+                    <!-- Card 1: Julian Vance / Aetherix Digital -->
+                    <article class="sw-card is-active-card" data-index="0" aria-label="Case Study 1: Aetherix Digital">
+                        <span class="sw-corner-tl" aria-hidden="true"></span>
+                        <span class="sw-corner-br" aria-hidden="true"></span>
+                        <div class="sw-card-media">
+                            <img src="/media/article img a.png" alt="Aetherix Digital High-Scale Cloud Platform" class="sw-card-img" loading="lazy" />
+                            <div class="sw-card-scrim" aria-hidden="true"></div>
+                        </div>
+                        <div class="sw-card-top-bar">
+                            <span class="sw-category-badge"><i class="fas fa-cubes text-[9px] text-[#E6C280]"></i>Enterprise SaaS</span>
+                            <span class="sw-metric-badge"><i class="fas fa-bolt text-[9px] text-[#E6C280]"></i>+184% Conversion</span>
+                        </div>
+                        <div class="sw-card-content">
+                            <h3 class="sw-project-title">Aetherix Digital</h3>
+                            <div class="sw-client-line">
+                                <img src="/media/clinet image (1).jpeg" alt="Julian Vance" class="sw-client-avatar" loading="lazy" />
+                                <span>Julian Vance <span class="text-[#8B949E]">· VP of Product</span></span>
+                            </div>
+                            <p class="sw-quote-text">“Damilare re-engineered our high-frequency enterprise portal from scratch. Page latency dropped from 2.8s to sub-110ms globally, directly lifting our organic trial conversions by +184%. His precision in front-end performance is rare.”</p>
+                            <div class="sw-card-bottom-row">
+                                <span class="sw-deliverable-tag">Edge Architecture · Sub-110ms TTFB</span>
+                                <div class="sw-card-arrow-circle" aria-hidden="true"><i class="fas fa-arrow-right"></i></div>
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- Card 2: Elena Rostova / Studio Vanta Zurich -->
+                    <article class="sw-card" data-index="1" aria-label="Case Study 2: Studio Vanta Zurich">
+                        <span class="sw-corner-tl" aria-hidden="true"></span>
+                        <span class="sw-corner-br" aria-hidden="true"></span>
+                        <div class="sw-card-media">
+                            <img src="/media/thumbs/thumb-1.jpg" alt="Studio Vanta Generative Visual Campaign" class="sw-card-img" loading="lazy" />
+                            <div class="sw-card-scrim" aria-hidden="true"></div>
+                        </div>
+                        <div class="sw-card-top-bar">
+                            <span class="sw-category-badge"><i class="fas fa-film text-[9px] text-[#E6C280]"></i>AI Cinematography</span>
+                            <span class="sw-metric-badge"><i class="fas fa-eye text-[9px] text-[#E6C280]"></i>6.2M Reach</span>
+                        </div>
+                        <div class="sw-card-content">
+                            <h3 class="sw-project-title">Studio Vanta Zurich</h3>
+                            <div class="sw-client-line">
+                                <img src="/media/clinet image 2b.jpeg" alt="Elena Rostova" class="sw-client-avatar" loading="lazy" />
+                                <span>Elena Rostova <span class="text-[#8B949E]">· Founder &amp; Creative Lead</span></span>
+                            </div>
+                            <p class="sw-quote-text">“We needed broadcast-tier generative cinema that didn't feel like synthetic AI slop. HODM delivered Hollywood-grade anamorphic lighting, coherent characters, and fluid 4K pacing for our global luxury brand campaign.”</p>
+                            <div class="sw-card-bottom-row">
+                                <span class="sw-deliverable-tag">Runway Gen-3 · 4K IMAX Optics</span>
+                                <div class="sw-card-arrow-circle" aria-hidden="true"><i class="fas fa-arrow-right"></i></div>
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- Card 3: Marcus Sterling / Apex Health Ecosystem -->
+                    <article class="sw-card" data-index="2" aria-label="Case Study 3: Apex Health Ecosystem">
+                        <span class="sw-corner-tl" aria-hidden="true"></span>
+                        <span class="sw-corner-br" aria-hidden="true"></span>
+                        <div class="sw-card-media">
+                            <img src="/media/article img b.webp" alt="Apex Health Digital Ecosystem" class="sw-card-img" loading="lazy" />
+                            <div class="sw-card-scrim" aria-hidden="true"></div>
+                        </div>
+                        <div class="sw-card-top-bar">
+                            <span class="sw-category-badge"><i class="fas fa-heart-pulse text-[9px] text-[#E6C280]"></i>Leadership &amp; Health</span>
+                            <span class="sw-metric-badge"><i class="fas fa-chart-line text-[9px] text-[#E6C280]"></i>$2.4M Pipeline</span>
+                        </div>
+                        <div class="sw-card-content">
+                            <h3 class="sw-project-title">Apex Health Ecosystem</h3>
+                            <div class="sw-client-line">
+                                <img src="/media/clint imgs (1).jpeg" alt="Marcus Sterling" class="sw-client-avatar" loading="lazy" />
+                                <span>Marcus Sterling <span class="text-[#8B949E]">· Managing Director</span></span>
+                            </div>
+                            <p class="sw-quote-text">“Michael's dual mastery of executive business strategy and clinical bio-wellness systems transformed our brand positioning. He unified our multi-disciplinary practices into a single high-converting digital authority.”</p>
+                            <div class="sw-card-bottom-row">
+                                <span class="sw-deliverable-tag">Full-Funnel Leadership Architecture</span>
+                                <div class="sw-card-arrow-circle" aria-hidden="true"><i class="fas fa-arrow-right"></i></div>
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- Card 4: Dr. Aris Thorne / SynapseBio Labs -->
+                    <article class="sw-card" data-index="3" aria-label="Case Study 4: SynapseBio Labs">
+                        <span class="sw-corner-tl" aria-hidden="true"></span>
+                        <span class="sw-corner-br" aria-hidden="true"></span>
+                        <div class="sw-card-media">
+                            <img src="/media/article img e.webp" alt="SynapseBio Genomic Visualization" class="sw-card-img" loading="lazy" />
+                            <div class="sw-card-scrim" aria-hidden="true"></div>
+                        </div>
+                        <div class="sw-card-top-bar">
+                            <span class="sw-category-badge"><i class="fas fa-microchip text-[9px] text-[#E6C280]"></i>Bio-Visualization</span>
+                            <span class="sw-metric-badge"><i class="fas fa-gauge-high text-[9px] text-[#E6C280]"></i>60 FPS Canvas</span>
+                        </div>
+                        <div class="sw-card-content">
+                            <h3 class="sw-project-title">SynapseBio Labs</h3>
+                            <div class="sw-client-line">
+                                <img src="/media/alex.png" alt="Dr. Aris Thorne" class="sw-client-avatar" loading="lazy" />
+                                <span>Dr. Aris Thorne <span class="text-[#8B949E]">· Principal Scientist</span></span>
+                            </div>
+                            <p class="sw-quote-text">“Our genomic visualization interface demanded zero frame drops while rendering 50,000 live data vectors. Damilare engineered custom WebGL shaders that ran butter-smooth on standard mobile browsers. Exceptional engineering craft.”</p>
+                            <div class="sw-card-bottom-row">
+                                <span class="sw-deliverable-tag">WebGL Shaders · Zero Frame Drops</span>
+                                <div class="sw-card-arrow-circle" aria-hidden="true"><i class="fas fa-arrow-right"></i></div>
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- Card 5: Soraya Al-Mansoor / Onyx Horology Dubai -->
+                    <article class="sw-card" data-index="4" aria-label="Case Study 5: Onyx Horology Dubai">
+                        <span class="sw-corner-tl" aria-hidden="true"></span>
+                        <span class="sw-corner-br" aria-hidden="true"></span>
+                        <div class="sw-card-media">
+                            <img src="/media/thumbs/thumb-5.jpg" alt="Onyx Horology 3D Timepiece Simulation" class="sw-card-img" loading="lazy" />
+                            <div class="sw-card-scrim" aria-hidden="true"></div>
+                        </div>
+                        <div class="sw-card-top-bar">
+                            <span class="sw-category-badge"><i class="fas fa-gem text-[9px] text-[#E6C280]"></i>Luxury Product 3D</span>
+                            <span class="sw-metric-badge"><i class="fas fa-clock text-[9px] text-[#E6C280]"></i>4.8x Dwell Time</span>
+                        </div>
+                        <div class="sw-card-content">
+                            <h3 class="sw-project-title">Onyx Horology Dubai</h3>
+                            <div class="sw-client-line">
+                                <img src="/media/client imago.png" alt="Soraya Al-Mansoor" class="sw-client-avatar" loading="lazy" />
+                                <span>Soraya Al-Mansoor <span class="text-[#8B949E]">· Chief Marketing Officer</span></span>
+                            </div>
+                            <p class="sw-quote-text">“The interactive 3D timepiece configurator designed by HODM set a new benchmark in our luxury sector. Clients can inspect titanium bevels down to micro-millimeter precision before commissioning bespoke builds.”</p>
+                            <div class="sw-card-bottom-row">
+                                <span class="sw-deliverable-tag">Photoreal 3D Configurator · Zero Cart Dropoff</span>
+                                <div class="sw-card-arrow-circle" aria-hidden="true"><i class="fas fa-arrow-right"></i></div>
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- Card 6: Devon Kincaid / Synthetix Cloud -->
+                    <article class="sw-card" data-index="5" aria-label="Case Study 6: Synthetix Cloud">
+                        <span class="sw-corner-tl" aria-hidden="true"></span>
+                        <span class="sw-corner-br" aria-hidden="true"></span>
+                        <div class="sw-card-media">
+                            <img src="/media/article img f.webp" alt="Synthetix Cloud Design System" class="sw-card-img" loading="lazy" />
+                            <div class="sw-card-scrim" aria-hidden="true"></div>
+                        </div>
+                        <div class="sw-card-top-bar">
+                            <span class="sw-category-badge"><i class="fas fa-code text-[9px] text-[#E6C280]"></i>Web Architecture</span>
+                            <span class="sw-metric-badge"><i class="fas fa-rocket text-[9px] text-[#E6C280]"></i>3x Dev Velocity</span>
+                        </div>
+                        <div class="sw-card-content">
+                            <h3 class="sw-project-title">Synthetix Cloud</h3>
+                            <div class="sw-client-line">
+                                <img src="/media/oren.png" alt="Devon Kincaid" class="sw-client-avatar" loading="lazy" />
+                                <span>Devon Kincaid <span class="text-[#8B949E]">· Head of Growth</span></span>
+                            </div>
+                            <p class="sw-quote-text">“Damilare built a component library and brand experience so tight that our dev velocity tripled in the first quarter post-launch. He doesn't just write code; he architects commercial clarity.”</p>
+                            <div class="sw-card-bottom-row">
+                                <span class="sw-deliverable-tag">Design System · -40% Bounce Rate</span>
+                                <div class="sw-card-arrow-circle" aria-hidden="true"><i class="fas fa-arrow-right"></i></div>
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- Card 7: Amara Okafor / Afro-Future Creative Syndicate -->
+                    <article class="sw-card" data-index="6" aria-label="Case Study 7: Afro-Future Creative Syndicate">
+                        <span class="sw-corner-tl" aria-hidden="true"></span>
+                        <span class="sw-corner-br" aria-hidden="true"></span>
+                        <div class="sw-card-media">
+                            <img src="/media/thumbs/thumb-4.jpg" alt="Afro-Future Creative Syndicate" class="sw-card-img" loading="lazy" />
+                            <div class="sw-card-scrim" aria-hidden="true"></div>
+                        </div>
+                        <div class="sw-card-top-bar">
+                            <span class="sw-category-badge"><i class="fas fa-clapperboard text-[9px] text-[#E6C280]"></i>Generative Worldbuilding</span>
+                            <span class="sw-metric-badge"><i class="fas fa-trophy text-[9px] text-[#E6C280]"></i>14 Awards</span>
+                        </div>
+                        <div class="sw-card-content">
+                            <h3 class="sw-project-title">Afro-Future Syndicate</h3>
+                            <div class="sw-client-line">
+                                <img src="/media/ilai.png" alt="Amara Okafor" class="sw-client-avatar" loading="lazy" />
+                                <span>Amara Okafor <span class="text-[#8B949E]">· Executive Director</span></span>
+                            </div>
+                            <p class="sw-quote-text">“The depth of cultural resonance, photoreal atmospheric lighting, and sonic choreography in our launch reel left our festival jury speechless. Michael operates at the absolute frontier of generative storytelling.”</p>
+                            <div class="sw-card-bottom-row">
+                                <span class="sw-deliverable-tag">Generative Storytelling · Official Festival Selection</span>
+                                <div class="sw-card-arrow-circle" aria-hidden="true"><i class="fas fa-arrow-right"></i></div>
+                            </div>
+                        </div>
+                    </article>
+
+                </div>
+            </div>
+
+            <!-- Bottom Proof Bar (Matching Reference Image) -->
+            <div class="sw-bottom-bar">
+                <!-- Linear Progress Indicator -->
+                <div class="sw-progress-line-track" aria-hidden="true">
+                    <div class="sw-progress-fill"></div>
+                </div>
+
+                <!-- 4 Key Proof Metrics -->
+                <div class="sw-metrics-grid">
+                    <div class="sw-metric-item">
+                        <div class="sw-metric-icon-wrap" aria-hidden="true"><i class="fas fa-folder-closed"></i></div>
+                        <div>
+                            <div class="sw-metric-stat">48+</div>
+                            <div class="sw-metric-label">Projects Completed</div>
+                        </div>
+                    </div>
+                    <div class="sw-metric-item">
+                        <div class="sw-metric-icon-wrap" aria-hidden="true"><i class="fas fa-star"></i></div>
+                        <div>
+                            <div class="sw-metric-stat">100%</div>
+                            <div class="sw-metric-label">Client Retention</div>
+                        </div>
+                    </div>
+                    <div class="sw-metric-item">
+                        <div class="sw-metric-icon-wrap" aria-hidden="true"><i class="fas fa-handshake"></i></div>
+                        <div>
+                            <div class="sw-metric-stat">35+</div>
+                            <div class="sw-metric-label">Enterprise Clients</div>
+                        </div>
+                    </div>
+                    <div class="sw-metric-item">
+                        <div class="sw-metric-icon-wrap" aria-hidden="true"><i class="fas fa-infinity"></i></div>
+                        <div>
+                            <div class="sw-metric-stat">∞</div>
+                            <div class="sw-metric-label">Possibilities</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Discrete Dots Navigator -->
+                <div class="sw-dots-track" role="tablist" aria-label="Proof of Work Cards">
+                    <button type="button" class="sw-dot active" role="tab" aria-selected="true" aria-label="Jump to Card 1"></button>
+                    <button type="button" class="sw-dot" role="tab" aria-selected="false" aria-label="Jump to Card 2"></button>
+                    <button type="button" class="sw-dot" role="tab" aria-selected="false" aria-label="Jump to Card 3"></button>
+                    <button type="button" class="sw-dot" role="tab" aria-selected="false" aria-label="Jump to Card 4"></button>
+                    <button type="button" class="sw-dot" role="tab" aria-selected="false" aria-label="Jump to Card 5"></button>
+                    <button type="button" class="sw-dot" role="tab" aria-selected="false" aria-label="Jump to Card 6"></button>
+                    <button type="button" class="sw-dot" role="tab" aria-selected="false" aria-label="Jump to Card 7"></button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- COMPREHENSIVE UNIFIED FOOTER ARCHITECTURE -->
+    <footer class="mho-footer relative z-20 border-t border-[rgba(245,230,200,0.1)] bg-[#0A0D10]/95 pt-12 pb-8">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-8 items-center justify-between pb-8 border-b border-[rgba(245,230,200,0.08)]">
+                <div class="md:col-span-4 text-center md:text-left">
+                    <a href="index.html" class="inline-flex items-center gap-2 text-lg font-extrabold text-[#F5E6C8] hover:text-[#FFF3CD] transition-colors">
+                        HODM <span class="text-xs font-semibold text-[#E6C280] uppercase tracking-wider">· H.O. Damilare Michael</span>
+                    </a>
+                    <p class="text-xs text-[#8B949E] mt-1.5 leading-relaxed">
+                        Full-Stack Web Architect · Generative AI Video Director · Executive Growth Strategist
+                    </p>
+                </div>
+
+                <div class="md:col-span-5 text-center flex flex-col items-center justify-center gap-2 text-xs text-[#A0AEC0]">
+                    <div class="flex items-center justify-center gap-4 flex-wrap">
+                        <a href="privacy-policy.html" class="hover:text-[#E6C280] transition-colors underline-offset-4 hover:underline">Privacy Policy</a>
+                        <span class="text-[rgba(245,230,200,0.2)]">|</span>
+                        <a href="mailto:reel3dlab@gmail.com" class="hover:text-[#E6C280] transition-colors flex items-center gap-1.5">
+                            <i class="fas fa-envelope text-[#E6C280]"></i> reel3dlab@gmail.com
+                        </a>
+                    </div>
+                    <div class="flex items-center gap-3 pt-1 flex-wrap justify-center">
+                        <a href="https://www.linkedin.com/in/mooloyede" target="_blank" rel="noopener noreferrer" class="footer-social-link" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="https://github.com/Oloxa" target="_blank" rel="noopener noreferrer" class="footer-social-link" aria-label="GitHub"><i class="fab fa-github"></i></a>
+                        <a href="https://contra.com/michael_qd3y29kn?referralExperimentNid=DEFAULT_REFERRAL_PROGRAM&referrerUsername=michael_qd3y29kn" target="_blank" rel="noopener noreferrer" class="footer-social-link" aria-label="Contra"><svg class="w-3.5 h-3.5 stroke-current" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2" fill="none"/><path d="M15 9a4.5 4.5 0 0 0-6 3.5 4.5 4.5 0 0 0 6 3.5"/></svg></a>
+                        <a href="https://www.youtube.com/@Reel3DLab" target="_blank" rel="noopener noreferrer" class="footer-social-link" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+                        <a href="https://www.tiktok.com/@reel3dlab" target="_blank" rel="noopener noreferrer" class="footer-social-link" aria-label="TikTok"><i class="fab fa-tiktok"></i></a>
+                        <a href="https://www.instagram.com/reel3dlab/" target="_blank" rel="noopener noreferrer" class="footer-social-link" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                        <a href="https://www.upwork.com/freelancers/~01a75506807291c279?mp_source=share" target="_blank" rel="noopener noreferrer" class="footer-social-link" aria-label="Upwork"><svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"><path d="M18.561 13.158c-1.102 0-2.135-.467-3.074-1.227l.228-1.076.008-.042c.207-1.143.849-3.06 2.839-3.06 1.492 0 2.703 1.212 2.703 2.703-.001 1.489-1.212 2.702-2.704 2.702zm0-8.14c-3.799 0-5.466 2.97-5.918 4.706C11.516 7.42 9.458 4.755 7.643 4.755c-2.484 0-4.5 2.016-4.5 4.5 0 2.485 2.016 4.501 4.5 4.501.996 0 1.918-.328 2.67-.881l-1.348 6.368h2.834l1.378-6.505c.829.588 1.777.957 2.822.957 3.799 0 6.643-2.88 6.643-6.702.001-3.82-2.843-6.697-6.642-6.697z"/></svg></a>
+                        <a href="https://www.fiverr.com/oloxa001" target="_blank" rel="noopener noreferrer" class="footer-social-link" aria-label="Fiverr"><svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"><path d="M16.25 16.25v-8.5h-2.5v1.8c-.6-.9-1.5-1.8-3-1.8-2.6 0-4.5 2.1-4.5 4.7s1.9 4.7 4.5 4.7c1.5 0 2.4-.8 3-1.8v1.7h2.5zm-5-1.9c-1.4 0-2.3-1.1-2.3-2.3 0-1.3.9-2.3 2.3-2.3s2.3 1.1 2.3 2.3c0 1.3-.9 2.3-2.3 2.3z"/></svg></a>
+                        <a href="https://behance.net/hodm_michael" target="_blank" rel="noopener noreferrer" class="footer-social-link" aria-label="Behance"><i class="fab fa-behance"></i></a>
+                    </div>
+                </div>
+
+                <div class="md:col-span-3 flex justify-center md:justify-end">
+                    <button type="button" class="footer-accessibility-btn trigger-accessibility-modal" aria-label="Open Accessibility Menu">
+                        <i class="fas fa-universal-access text-[#E6C280]"></i>
+                        <span>Accessibility Options</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Center Bottom: Footer Navigation Sequence Bar (< ^ >) -->
+            <div class="flex flex-col sm:flex-row items-center justify-between gap-4 pt-6 text-xs text-[#8B949E]">
+                <div class="text-center sm:text-left">
+                    © 2026 H.O. Damilare Michael (HODM). All rights reserved.
+                </div>
+
+                <div class="footer-nav-sequence-bar" role="navigation" aria-label="Sequential Page Navigation">
+                    <a id="footerSeqPrevBtn" href="index.html" class="footer-nav-seq-btn" title="Previous Page: Biography" aria-label="Previous Page">
+                        <i class="fas fa-chevron-left"></i>
+                    </a>
+                    <button id="footerSeqTopBtn" type="button" class="footer-scroll-top-btn" title="Scroll to Top Header" aria-label="Scroll to Top Header">
+                        <i class="fas fa-arrow-up"></i>
+                        <span>Top</span>
+                    </button>
+                    <a id="footerSeqNextBtn" href="creative-space.html" class="footer-nav-seq-btn" title="Next Page: Creative AI Space" aria-label="Next Page">
+                        <i class="fas fa-chevron-right"></i>
+                    </a>
+                </div>
+
+                <div class="text-center sm:text-right font-mono text-[11px] text-[#A0AEC0]">
+                    PAGE 02 // WEB ARCHITECTURE
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bottom Right: Floating Quick-Chat WhatsApp Button -->
+    <a href="https://wa.me/2348000000000?text=Hello%20H.O.%20Damilare%20Michael%2C%20I%20am%20interested%20in%20web%20architecture%20services." target="_blank" rel="noopener noreferrer" class="floating-whatsapp-btn" aria-label="Quick Chat on WhatsApp">
+        <span class="whatsapp-pulse-dot" aria-hidden="true"></span>
+        <i class="fab fa-whatsapp text-lg"></i>
+        <span>Quick WhatsApp</span>
+    </a>
+
+    <!-- Accessibility Configuration Modal -->
+    <div id="mhoAccessibilityModal" class="mho-modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="a11yModalTitle">
+        <div class="mho-modal-card p-6 sm:p-8 max-w-md relative">
+            <button id="closeA11yModalBtn" type="button" class="absolute top-5 right-5 w-8 h-8 rounded-full bg-[#1A2026] text-[#F5E6C8] hover:text-[#FFF3CD] flex items-center justify-center transition-colors" aria-label="Close Accessibility Menu">
+                <i class="fas fa-times"></i>
+            </button>
+            <div class="flex items-center gap-3 mb-6">
+                <div class="w-10 h-10 rounded-xl bg-[#E6C280]/20 text-[#E6C280] flex items-center justify-center text-lg">
+                    <i class="fas fa-universal-access"></i>
+                </div>
+                <div>
+                    <h3 id="a11yModalTitle" class="text-lg font-bold text-[#F5E6C8]">Accessibility Controls</h3>
+                    <p class="text-xs text-[#8B949E]">Customize visual rendering for enhanced comfort</p>
+                </div>
+            </div>
+            <div class="space-y-3 mb-6">
+                <button id="a11yToggleContrast" type="button" class="w-full flex items-center justify-between p-3 rounded-xl bg-[#0D0F12] border border-[#F5E6C8]/15 hover:border-[#E6C280] text-[#F5E6C8] text-xs font-semibold transition-all">
+                    <span class="flex items-center gap-2.5"><i class="fas fa-adjust text-[#E6C280]"></i> High Contrast Mode</span>
+                    <span class="text-[11px] text-[#A0AEC0] font-mono">Toggle</span>
+                </button>
+                <button id="a11yToggleText" type="button" class="w-full flex items-center justify-between p-3 rounded-xl bg-[#0D0F12] border border-[#F5E6C8]/15 hover:border-[#E6C280] text-[#F5E6C8] text-xs font-semibold transition-all">
+                    <span class="flex items-center gap-2.5"><i class="fas fa-font text-[#E6C280]"></i> Larger Typography (+10%)</span>
+                    <span class="text-[11px] text-[#A0AEC0] font-mono">Toggle</span>
+                </button>
+                <button id="a11yToggleMotion" type="button" class="w-full flex items-center justify-between p-3 rounded-xl bg-[#0D0F12] border border-[#F5E6C8]/15 hover:border-[#E6C280] text-[#F5E6C8] text-xs font-semibold transition-all">
+                    <span class="flex items-center gap-2.5"><i class="fas fa-pause text-[#E6C280]"></i> Reduce Motion &amp; Animations</span>
+                    <span class="text-[11px] text-[#A0AEC0] font-mono">Toggle</span>
+                </button>
+            </div>
+            <div class="pt-3 border-t border-[rgba(245,230,200,0.1)] flex items-center justify-between">
+                <button id="a11yResetBtn" type="button" class="text-xs text-[#8B949E] hover:text-[#E6C280] transition-colors">
+                    Reset to Defaults
+                </button>
+                <span class="text-[10px] text-[#A0AEC0] font-mono">WCAG 2.1 AA Compliant</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification Container -->
+    <div id="mho-toast" class="hidden"></div>
+
+    <!-- Fixed Toggle Button for Site-Wide Animations (position: fixed; right: 0; top: 20%) -->
+    <button id="globalBgAnimToggle" type="button" class="bg-anim-toggle-btn group" aria-label="Toggle Animations" title="Toggle Animations (On/Off)">
+        <span class="anim-status-indicator" aria-hidden="true">
+            <span class="anim-pulse-dot"></span>
+            <span class="anim-core-dot"></span>
+        </span>
+        <span class="anim-toggle-icon" aria-hidden="true">
+            <i class="fas fa-play text-xs text-[#E6C280]"></i>
+        </span>
+        <div class="anim-toggle-text">
+            <span class="anim-tag">ANIMATION</span>
+            <span class="anim-state">ON</span>
+        </div>
+    </button>
+
+    <!-- Scripts -->
+    <script src="js/project-vectors.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/selected-work.js"></script>
+</body>
+</html>
